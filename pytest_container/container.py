@@ -474,6 +474,10 @@ class ContainerBase:
         default_factory=list
     )
 
+    #: optional list of additional arguments to pass to the entrypoint,
+    #: overriding CMD from the container definition
+    entrypoint_args: List[str] = field(default_factory=list)
+
     _is_local: bool = False
 
     def __post_init__(self) -> None:
@@ -570,6 +574,8 @@ class ContainerBase:
                 cmd.extend(bash_launch_end)
         else:  # pragma: no cover
             assert False, "This branch must be unreachable"  # pragma: no cover
+
+        cmd.extend(self.entrypoint_args)
 
         return cmd
 
